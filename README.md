@@ -1,2 +1,1 @@
-#  UpSchool-Course-follow-up
- 
+# UpSchool
