@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Infrastructure.Persistence.Contexts
 {
-    public class IdentityContext : IdentityDbContext<User, Role, string, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
+    public class IdentityContext:IdentityDbContext<User,Role,string,UserClaim,UserRole,UserLogin,RoleClaim,UserToken>
     {
 
 
@@ -24,9 +24,11 @@ namespace Infrastructure.Persistence.Contexts
             modelBuilder.Ignore<Account>();
             modelBuilder.Ignore<Country>();
             modelBuilder.Ignore<City>();
+            modelBuilder.Ignore<AccountCategory>();
+            modelBuilder.Ignore<Category>();
+            modelBuilder.Ignore<Address>();
 
             base.OnModelCreating(modelBuilder);
         }
     }
 }
-

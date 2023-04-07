@@ -12,9 +12,9 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {
-
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

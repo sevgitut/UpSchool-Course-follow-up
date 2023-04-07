@@ -11,7 +11,7 @@ using MediatR;
 
 namespace Application.Features.Cities.Commands.Add
 {
-    public class CityAddCommandHandler : IRequestHandler<CityAddCommand, Response<int>>
+    public class CityAddCommandHandler:IRequestHandler<CityAddCommand,Response<int>>
     {
         private readonly IApplicationDbContext _applicationDbContext;
 
@@ -42,7 +42,7 @@ namespace Application.Features.Cities.Commands.Add
 
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
 
-            return new Response<int>($"The new city named \"{city.Name}\" was successfully added.", city.Id);
+            return new Response<int>($"The new city named \"{city.Name}\" was successfully added.",city.Id);
         }
     }
 }
