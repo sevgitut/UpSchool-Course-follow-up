@@ -13,5 +13,6 @@ namespace Domain.Identity
 
         public DateTimeOffset? ModifiedOn { get; set; }
         public string? ModifiedByUserId { get; set; }
+        public object CreatedUserId { get; set; }
     }
 }
