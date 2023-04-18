@@ -15,6 +15,7 @@ namespace Infrastructure.Services
         public AuthenticationManager(UserManager<User> userManager)
         {
             _userManager = userManager;
+            
         }
 
         public async Task<string> CreateUserAsync(CreateUserDto createUserDto, CancellationToken cancellationToken)
@@ -32,7 +33,10 @@ namespace Infrastructure.Services
                 throw new ValidationException(failures);
             }
 
+            
             return user.Id;
+
+            
         }
 
         public async Task<string> GenerateEmailActivationTokenAsync(string userId, CancellationToken cancellationToken)
