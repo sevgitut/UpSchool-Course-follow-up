@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using UpSchool.Domain.Dtos;
 using UpSchool.Domain.Entities;
 using UpSchool.Domain.Utilities;
 using UpSchool.Persistence.EntityFramework.Contexts;
+using UpSchool.WebApi.Hubs;
 
 namespace UpSchool.WebApi.Controllers
 {
@@ -15,6 +17,7 @@ namespace UpSchool.WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly UpStorageDbContext _dbContext;
+        private readonly IHubContext<AccountsHub> _accountsHubContext;
 
         public AccountsController(IMapper mapper, UpStorageDbContext dbContext)
         {
@@ -58,7 +61,7 @@ namespace UpSchool.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(AccountAddDto accountAddDto)
+        public async Task<IActionResult> Add(AccountAddDto accountAddDto, CancellationToken cancellationToken)
         {
             
             var account = new Account()
@@ -72,10 +75,15 @@ namespace UpSchool.WebApi.Controllers
                 Url = accountAddDto.Url,
             };
 
-            _dbContext.Accounts.Add(account);
-            _dbContext.SaveChanges();
+            await _dbContext.Accounts.AddAsync(account,cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Ok(AccountDto.MapFromAccount(account));
+            var accountDto = AccountDto.MapFromAccount(account);
+
+            await _accountsHubContext.Clients.AllExcept(accountAddDto.ConnectionId).SendAsync(SignalRMethodKeys.Accounts.Added, accountDto, cancellationToken);
+
+
+            return Ok(accountDto);
         }
 
         [HttpPut]
