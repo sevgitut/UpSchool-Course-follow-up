@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models.Auth;
+using Application.Features.Auth.Commands.Login;
 using Domain.Identity;
 using FluentValidation;
 using FluentValidation.Results;
@@ -11,6 +12,8 @@ namespace Infrastructure.Services
     public class AuthenticationManager : IAuthenticationService
     {
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IJwtService _jwtService;
 
         public AuthenticationManager(UserManager<User> userManager)
         {
@@ -33,10 +36,8 @@ namespace Infrastructure.Services
                 throw new ValidationException(failures);
             }
 
-            
             return user.Id;
 
-            
         }
 
         public async Task<string> GenerateEmailActivationTokenAsync(string userId, CancellationToken cancellationToken)
@@ -50,5 +51,23 @@ namespace Infrastructure.Services
         {
             return _userManager.Users.AnyAsync(x => x.Email == email,cancellationToken);
         }
+
+        public async Task<JwtDto> LoginAsync(AuthLoginRequest authLoginRequest, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(authLoginRequest.Email);
+            var loginResult = await _signInManager.PasswordSignInAsync(user, authLoginRequest.Password, false, false);
+
+            if (!loginResult.Succeeded)
+            {
+                throw new ValidationException(CreateValidationFailure);
+            }
+
+            return _jwtService.Generate(user.Id, user.Email, user.FirstName, user.LastName);
+        }
+
+        private List<ValidationFailure> CreateValidationFailure => new List<ValidationFailure>()
+        {
+            new ValidationFailure("Email & Password","Your Email or Password is incorrect")
+        };
     }
 }
