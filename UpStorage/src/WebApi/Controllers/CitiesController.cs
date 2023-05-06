@@ -18,6 +18,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("GetAll")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync(CityGetAllQuery query)
         {
 
@@ -25,6 +26,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             return Ok(await Mediator.Send(new CityGetAllQuery(id, null)));
