@@ -10,7 +10,7 @@ namespace Application.Common.Localizations
     {
         public static class Auth
         {
-            public static string EmailOrPasswordIsCorrect => "EmailOrPasswordIsInCorrect";
+            public static string EmailOrPasswordIsInCorrect => "EmailOrPasswordIsInCorrect";
         }
 
         public static class City

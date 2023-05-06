@@ -16,7 +16,7 @@ namespace Infrastructure.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IJwtService _jwtService;
-        private readonly IStringLocalizer<CommonLocalizations> _localizer
+        private readonly IStringLocalizer<CommonLocalizations> _localizer;
 
         public AuthenticationManager(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtService, IStringLocalizer<CommonLocalizations> localizer)
         {
