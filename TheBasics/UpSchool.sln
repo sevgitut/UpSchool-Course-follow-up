@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpSchool.WebApi", "UpSchool
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpSchool.Persistence", "UpSchool.Persistence\UpSchool.Persistence.csproj", "{BD901295-89C4-42B1-A9E4-2F22BF7989FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpSchool.Selenium.ConsoleClient", "src\UpSchool.Selenium.ConsoleClient\UpSchool.Selenium.ConsoleClient.csproj", "{39921C4F-B936-4BC8-9714-927889CB6561}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpSchool.Selenium.ConsoleClient", "src\UpSchool.Selenium.ConsoleClient\UpSchool.Selenium.ConsoleClient.csproj", "{39921C4F-B936-4BC8-9714-927889CB6561}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D6D528A3-3B5A-4595-AA31-C87A43B23313}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpSchool.Domain.Tests", "tests\TestProject1\UpSchool.Domain.Tests.csproj", "{20077D3B-2B33-4DBA-815E-A5799D1532DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +55,16 @@ Global
 		{39921C4F-B936-4BC8-9714-927889CB6561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39921C4F-B936-4BC8-9714-927889CB6561}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39921C4F-B936-4BC8-9714-927889CB6561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20077D3B-2B33-4DBA-815E-A5799D1532DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20077D3B-2B33-4DBA-815E-A5799D1532DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20077D3B-2B33-4DBA-815E-A5799D1532DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20077D3B-2B33-4DBA-815E-A5799D1532DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{20077D3B-2B33-4DBA-815E-A5799D1532DC} = {D6D528A3-3B5A-4595-AA31-C87A43B23313}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2014F114-7C8A-4A2E-8141-AA6629D4F9EB}
