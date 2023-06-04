@@ -25,6 +25,11 @@ builder.Services.AddBlazoredToast();
 
 builder.Services.AddScoped<IToasterService, BlazoredToastService>();
 
+builder.Services.AddLocalization(options =>
+{
+    options.ResourcesPath = "Resources";
+});
+
 //builder.Services.AddSingleton(typeof(LoggerBase));
 
 builder.Services.AddSingleton<IUrlHelperService>(new UrlHelperService(titanicFluteApiUrl, signalRUrl));
