@@ -9,6 +9,11 @@ namespace WebApi.Filters
     public class GlobalExceptionFilter : IAsyncExceptionFilter
     {
         private readonly ILogger<GlobalExceptionFilter> _logger;
+
+        public GlobalExceptionFilter(ILogger<GlobalExceptionFilter> logger)
+        {
+            _logger = logger;
+        }
         public Task OnExceptionAsync(ExceptionContext context)
         {
             ApiErrorDto apiErrorDto = new ApiErrorDto();

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Models.Auth;
 using Application.Common.Models.Email;
-using Domain.Identity;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.Auth.Commands.Register
 {

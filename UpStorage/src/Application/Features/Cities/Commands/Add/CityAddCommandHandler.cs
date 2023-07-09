@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Localizations;
 using Domain.Common;
 using Domain.Entities;
-using Domain.Extensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace Application.Features.Cities.Commands.Add
@@ -32,7 +25,6 @@ namespace Application.Features.Cities.Commands.Add
         public async Task<Response<int>> Handle(CityAddCommand request, CancellationToken cancellationToken)
         {
             
-
             var city = new City()
             {
                 Name = request.Name,

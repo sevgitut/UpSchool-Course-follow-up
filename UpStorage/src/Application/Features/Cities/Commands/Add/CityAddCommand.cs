@@ -12,6 +12,6 @@ namespace Application.Features.Cities.Commands.Add
         public int CountryId { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-        public List<Guid> CountryIds { get; set; }
+        //public List<Guid> CountryIds { get; set; }
     }
 }

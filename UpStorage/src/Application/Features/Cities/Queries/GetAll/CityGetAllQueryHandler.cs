@@ -27,8 +27,8 @@ namespace Application.Features.Cities.Queries.GetAll
 
         public async Task<List<CityGetAllDto>> Handle(CityGetAllQuery request, CancellationToken cancellationToken)
         {
-            //if (_memoryCache.TryGetValue(CITIES_KEY, out List<CityGetAllDto> cachedCities))
-            //    return cachedCities;
+            if (_memoryCache.TryGetValue(CITIES_KEY, out List<CityGetAllDto> cachedCities))
+                return cachedCities;
 
             var dbQuery = _applicationDbContext.Cities.AsQueryable();
 

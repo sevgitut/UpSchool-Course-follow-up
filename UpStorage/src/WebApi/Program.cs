@@ -1,20 +1,18 @@
+using System.Globalization;
 using Application;
+using Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using Application.Common.Interfaces;
 using Domain.Settings;
-using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Serilog;
-using System.Globalization;
-using System.Text;
 using WebApi.Filters;
+using Microsoft.Extensions.Options;
+using Serilog;
 using WebApi.Services;
-
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -27,6 +25,10 @@ try
 
     builder.Host.UseSerilog();
 
+    builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+    builder.Services.AddScoped<ICurrentUserService, CurrentUserManager>();
+
     // Add services to the container.
 
     builder.Services.AddControllers(opt =>
@@ -36,6 +38,8 @@ try
     });
 
     builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+    builder.Services.Configure<GoogleSettings>(builder.Configuration.GetSection("GoogleSettings"));
 
     Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -56,18 +60,18 @@ try
             Description = $"Input your Bearer token in this format - Bearer token to access this API",
         });
         setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer",
-                            },
-                        }, new List<string>()
-                    },
-                });
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer",
+                },
+            }, new List<string>()
+        },
+    });
     });
 
     // Add services to the container.
@@ -79,24 +83,24 @@ try
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-                    .AddJwtBearer(o =>
-                    {
-                        o.RequireHttpsMetadata = false;
-                        o.SaveToken = false;
-                        o.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ClockSkew = TimeSpan.Zero,
-                            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-                            ValidAudience = builder.Configuration["JwtSettings:Audience"],
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
-                        };
-                    });
+        .AddJwtBearer(o =>
+        {
+            o.RequireHttpsMetadata = false;
+            o.SaveToken = false;
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
+            };
+        });
 
-    //Localization Files' Path
+    // Localization Files' Path
     builder.Services.AddLocalization(options =>
     {
         options.ResourcesPath = "Resources";
@@ -108,15 +112,17 @@ try
 
         List<CultureInfo> cultureInfos = new List<CultureInfo>()
     {
-        defaultCulture, //en-GB
-        new("tr-TR")
+        defaultCulture, // en-GB
+        new ("tr-TR")
     };
 
         options.SupportedCultures = cultureInfos;
-        options.SupportedUICultures = cultureInfos;
-        options.DefaultRequestCulture = new RequestCulture(defaultCulture);
-        options.ApplyCurrentCultureToResponseHeaders = true;
 
+        options.SupportedUICultures = cultureInfos;
+
+        options.DefaultRequestCulture = new RequestCulture(defaultCulture);
+
+        options.ApplyCurrentCultureToResponseHeaders = true;
     });
 
     builder.Services.AddSignalR();
@@ -124,6 +130,16 @@ try
     builder.Services.AddScoped<IAccountHubService, AccountHubManager>();
 
     builder.Services.AddMemoryCache();
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll",
+            builder => builder
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .SetIsOriginAllowed((host) => true)
+                .AllowAnyHeader());
+    });
 
     var app = builder.Build();
 
@@ -142,13 +158,16 @@ try
 
     app.UseHttpsRedirection();
 
+    app.UseCors("AllowAll");
+
+    app.UseAuthentication();
+
     app.UseAuthorization();
 
     app.MapControllers();
 
     app.Run();
 
-    
 }
 catch (Exception ex)
 {
